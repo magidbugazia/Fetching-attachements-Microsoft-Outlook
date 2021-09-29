@@ -17,45 +17,30 @@ conda activate jupytab-notebook-env
 
 ## `exchangelib` Installation
 
-
-
 We will be using `exchangelibe` library to coummnicate with `Office365`. Official documentation: [exchangelib](https://ecederstrand.github.io/exchangelib/#installation).
 
-###### In the project environment run: 
+. In the project environment run: ```conda install exchangelib ```
+     ##### *depends on your setup, this might through an error that:*
+      >  PackagesNotFoundError: The following packages are not available from current channels:
 
-```
-conda install exchangelib
-```
-##### *depends on your setup, this might through an error that:*
+      > (it will print out a list of urrent channels)
 
->  PackagesNotFoundError: The following packages are not available from current channels:
+    ##### Fix: start by displaying a list of active channels inside conda by typing either one of the following commands:
 
-> (it will print out a list of urrent channels)
+      ```conda info```
+      ```conda config --show channels```
 
-###### Fix: start by displaying a list of active channels inside conda by typing either one of the following commands:
+    ###### *make sure you have a forge channel in the list, if not we can easily add one*
 
-```
-conda info
-```
-```
-conda config --show channels
-```
+    ###### Add a forge channel `conda-forge` to your list of channels with this command:
 
-###### *make sure you have a forge channel in the list, if not we can easily add one*
+      ```conda config --append channels conda-forge```
 
-###### Add a forge channel `conda-forge` to your list of channels with this command:
+    *It tells conda to also look on the conda-forge channel when you search for packages*
 
-```
-conda config --append channels conda-forge
-```
+    #### You can then simply install the two packages with:
 
-*It tells conda to also look on the conda-forge channel when you search for packages*
-
-#### You can then simply install the two packages with:
-
-```
-conda install exchangelib
-```
+      ```conda install exchangelib```
 
 
 
