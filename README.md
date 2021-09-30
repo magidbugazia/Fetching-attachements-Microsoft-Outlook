@@ -84,4 +84,4 @@ print(df)
 
 ## Further Work to Follow:
 
-- Directly expose real-time dataframe from Jupyter NoteBook into [Tableau](https://github.com/magidbugazia/Realtime_Teableau_JupyterNotebook.git))
+- Directly expose real-time dataframe from Jupyter NoteBook into Tableau [Realtime_Teableau_JupyterNotebook](https://github.com/magidbugazia/Realtime_Teableau_JupyterNotebook.git))
