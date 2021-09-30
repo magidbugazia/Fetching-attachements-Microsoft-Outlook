@@ -1,6 +1,6 @@
 # Fetching attachments from Microsoft-365 Outlook mail using Python script 
 
-We will be utilizing `Mac/Linux terminal`, `Python 3.9.6`, and `Anaconda`
+We will be utilizing `Mac/Linux terminal`, `Python 3.9.6`, and `Jupyter Notebook`
 
 The sole purpose of this project is to eliminate the need of logging into your email, downloading the attachments locally, then calling them into your Python script.
 
@@ -16,35 +16,72 @@ conda create -n jupytab-notebook-env python=3.9.6
 conda activate jupytab-notebook-env
 ```
 
-## `exchangelib` Installation
+## 1. Installing `exchangelib` 
 
-We will be using `exchangelibe` library to coummnicate with `Office365`. Official documentation: [exchangelib](https://ecederstrand.github.io/exchangelib/#installation).
+We will be using `exchangelibe` library (official documentation: [exchangelib](https://ecederstrand.github.io/exchangelib/#installation)) to coummnicate with `Office365`. 
 
-. In the project environment run: ```conda install exchangelib ```
+- In the project environment run: `conda install exchangelib `
 
-##### *depends on your setup, this might through an error that:*
-   >  PackagesNotFoundError: The following packages are not available from current channels:
+- Make sure you have a forge-channel already setup:
 
-   > (it will print out a list of urrent channels)
+  - To display current list run: ```conda info``` ```conda config --show channels```
 
-##### Fix: start by displaying a list of active channels inside conda by typing either one of the following commands:
-
-```conda info``` ```conda config --show channels```
-
-###### *make sure you have a forge channel in the list, if not we can easily add one*
-
-Add a forge channel `conda-forge` to your list of channels with this command: ```conda config --append channels conda-forge```
-
-*It tells conda to also look on the conda-forge channel when you search for packages*
-
-You can then simply install the two packages with:```conda install exchangelib```
+  - Add a forge channel (conda-forge) to your list with this command: ```conda config --append channels conda-forge```
 
 
+## 2. Fetching attachments in `Jupyter Notebook`
 
 
+ ``` Python
+import io
+
+from exchangelib import DELEGATE, Account, Credentials, Configuration, FileAttachment, ItemAttachment, Message, \
+  CalendarItem, HTMLBody
+import pandas as pd
+
+credentials = Credentials('YOUR_EMAIL@host.com', 'YOUR_PASSWORD')
+config = Configuration(server='outlook.office365.com', credentials=credentials)
+account = Account(
+    primary_smtp_address='YOUR_EMAIL@host.com',
+    config=config,
+    autodiscover=False,
+    access_type=DELEGATE
+)
+```
+
+Find all attachments in the inbox matching the email subject you specify:
+
+```Python
+item = account.inbox.all().get(subject='TARGET_EMAIL_SUBJECT')
+ ```
+Iterate through the attachments and match with the attachment name and extension you specify:
+
+```python
+for attachment in item.attachments:
+    if attachment.name == 'filename.extension':
+        my_excel_file_in_bytes = attachment.content
+        break
+else:
+    assert False, 'No attachment with that name'
+```
+
+###### The attachment content will be the excel file in the form of a byte string
+
+Convert to a file-like object and read the excel file in memory:
+
+ - In terminal in our project environment run the command: `conda install xlrd`
+ - Back to Jupyter Notebook run the code:
 
 
+``` Python
+my_excel_file_io = io.BytesIO(my_excel_file_in_bytes)
+df = pd.read_excel(io=my_excel_file_io)
+```
 
+```python
+print(df)
+```
 
+## Further Work to Follow:
 
-
+- Directly expose real-time dataframe from Jupyter NoteBook into Tableau
